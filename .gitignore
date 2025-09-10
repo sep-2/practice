@@ -39,3 +39,39 @@
 
 # debug information files
 *.dwo
+
+# Visual Studio関連
+*.user
+*.suo
+*.cache
+*.log
+*.tlog
+*.ipch
+*.opensdf
+*.VC.db
+*.VC.opendb
+
+# ビルド成果物
+build/
+Build/
+bin/
+Bin/
+obj/
+Obj/
+out/
+Out/
+Debug/
+Release/
+
+# 一時ファイル
+*.tmp
+*.temp
+
+
+# その他
+*.db
+*.DS_Store
+Thumbs.db
+
+.vs
+Intermediate
