@@ -33,13 +33,41 @@ void Main()
 	// プレイヤーが右を向いているか | Whether player is facing right
 	bool isPlayerFacingRight = true;
 
+	// 30フレームごとのカーソル位置を保存する配列
+	Array<Vec2> cursorTrail;
+	constexpr int trailLength = 10; // 保存する点の数
+	int frameCounter = 0;
+
 	while (System::Update())
 	{
+		// 5フレームごとにカーソル位置を保存
+		if (++frameCounter >= 5)
+		{
+			frameCounter = 0;
+			cursorTrail << Cursor::Pos();
+			if (cursorTrail.size() > trailLength)
+			{
+				cursorTrail.pop_front();
+			}
+		}
+		// 保存した点を線でつなぐ
+		for (size_t i = 1; i < cursorTrail.size(); ++i)
+		{
+			Line{ cursorTrail[i - 1], cursorTrail[i] }.draw(4, Palette::Orange);
+		}
+
+		// 最新位置に円を描画
+		if (!cursorTrail.isEmpty())
+		{
+			Circle{ cursorTrail.back(), 40 }.draw(ColorF{ 1.0, 0.0, 0.0, 0.2 });
+		}
+
+
 		// テクスチャを描く | Draw the texture
-		texture.draw(20, 20);
+		texture.draw(30, 20);
 
 		// テキストを描く | Draw text
-		font(U"Hello, Siv3D!🎮").draw(64, Vec2{ 20, 340 }, ColorF{ 0.2, 0.4, 0.8 });
+		font(U"こんにちは🗺️").draw(64, Vec2{ 20, 340 }, ColorF{ 0.2, 0.4, 0.8 });
 
 		// 指定した範囲内にテキストを描く | Draw text within a specified area
 		font(U"Siv3D (シブスリーディー) は、ゲームやアプリを楽しく簡単な C++ コードで開発できるフレームワークです。")
@@ -58,7 +86,7 @@ void Main()
 		Line{ 540, 330, 760, 260 }.drawArrow(8, SizeF{ 20, 20 }, ColorF{ 0.4 });
 
 		// 半透明の円を描く | Draw a semi-transparent circle
-		Circle{ Cursor::Pos(), 40 }.draw(ColorF{ 1.0, 0.0, 0.0, 0.5 });
+		Circle{ Cursor::Pos(), 40 }.draw(ColorF{ 1.0, 0.0, 0.0, 0.2 });
 
 		// ボタン | Button
 		if (SimpleGUI::Button(U"count: {}"_fmt(count), Vec2{ 520, 370 }, 120, (checked == false)))
@@ -91,6 +119,7 @@ void Main()
 
 		// プレイヤーを描く | Draw the player
 		emoji.scaled(0.75).mirrored(isPlayerFacingRight).drawAt(playerPosX, 540);
+
 	}
 }
 
